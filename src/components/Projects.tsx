@@ -23,7 +23,7 @@ const projects = [
         description: "A newly updated 3D portfolio website",
         image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800",
         github: "https://github.com/iZyns/3D-portfolio-web",
-        demo: "https://demo.com",
+        demo: "https://vincentw.dev",
         tags: ["Three.js", "React", "Tailwind"]
     }
 ];
