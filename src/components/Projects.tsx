@@ -6,7 +6,7 @@ const projects = [
         title: "Study Platform",
         description: "A full-featured study platform built with React and Node.js",
         image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=800",
-        github: "https://github.com",
+        github: "https://github.com/iZyns/StudyPal",
         demo: "https://gostudypal.com",
         tags: ["React", "Node.js", "Firebase", "OpenAI"]
     },
@@ -22,7 +22,7 @@ const projects = [
         title: "Portfolio Website",
         description: "A newly updated 3D portfolio website",
         image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800",
-        github: "https://github.com",
+        github: "https://github.com/iZyns/3D-portfolio-web",
         demo: "https://demo.com",
         tags: ["Three.js", "React", "Tailwind"]
     }
