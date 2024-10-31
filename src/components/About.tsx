@@ -22,8 +22,8 @@ export default function About() {
                             className="w-32 h-32 rounded-full mx-auto mb-6 object-cover object-top"
                         />
                         <p className="text-gray-300 mb-6 leading-relaxed">
-                            I'm a Computer Science & Software Engineering graduate from the University of Washington, passionate about building innovative web applications. I specialize in backend development, with hands-on experience in software engineering through my internship at IndoCyber Global Teknologi.
-                            From developing study platforms to AI-integrated job matching systems, I combine technical expertise with creative problem-solving to build impactful applications.</p>
+                            I'm a Computer Science & Software Engineering graduate from the University of Washington, passionate about building innovative web applications. I specialize in backend development, with hands-on experience in software engineering through internship.
+                            From developing full stack web application to implementing AI solutions, I combine technical expertise with creative problem-solving to build impactful applications.</p>
                         <div className="mb-12">
                             <div className="flex justify-center space-x-4 mb-8">
                                 <button
