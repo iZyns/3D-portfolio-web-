@@ -1,9 +1,9 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Sphere, Stars, Float, MeshDistortMaterial, GradientTexture, Sparkles } from '@react-three/drei';
+import { OrbitControls, Sphere, Stars, Float, MeshDistortMaterial, GradientTexture, Sparkles, Text3D, Center } from '@react-three/drei';
 import { Github, Linkedin, Mail, MousePointer2 } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
-import { Group, Mesh, BufferGeometry, Material } from 'three';
+import { Group, Mesh, BufferGeometry, Material, Vector3 } from 'three';
 import { NormalBufferAttributes } from 'three';
 import * as THREE from 'three';
 
@@ -11,6 +11,7 @@ function Scene() {
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
     const mainSphereRef = useRef<Mesh<BufferGeometry<NormalBufferAttributes>, Material | Material[]>>(null);
     const groupRef = useRef<Group>(null);
+    const [hovered, setHovered] = useState(false);
 
     useEffect(() => {
         const handleMouseMove = (event: MouseEvent) => {
@@ -22,41 +23,67 @@ function Scene() {
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, []);
+
     const lightX = mousePosition.x * 10;
     const lightY = mousePosition.y * 10;
+
+    // Animation values
+    const pulseScale = hovered ? 1.1 : 1;
+    const distortionSpeed = hovered ? 4 : 2;
+    const distortionIntensity = hovered ?
+        0.4 + Math.abs(mousePosition.x) * 0.3 :
+        0.3 + Math.abs(mousePosition.x) * 0.2;
 
     return (
         <>
             <color attach="background" args={['#030014']} />
             <fog attach="fog" args={['#030014', 5, 25]} />
+
+            {/* Enhanced Lighting */}
             <ambientLight intensity={0.2} />
             <pointLight position={[lightX, lightY, 10]} intensity={2} color="#818cf8" />
             <pointLight position={[-lightX, -lightY, -10]} intensity={1} color="#c084fc" />
+            <spotLight
+                position={[5, 5, 5]}
+                angle={0.15}
+                penumbra={1}
+                intensity={0.5}
+                color="#f472b6"
+            />
 
             <group ref={groupRef}>
                 <Float speed={2} rotationIntensity={2} floatIntensity={1}>
-                    <Sphere ref={mainSphereRef} args={[1.2, 64, 64]} position={[0, 0, 0]}>
+                    <Sphere
+                        ref={mainSphereRef}
+                        args={[1.2, 64, 64]}
+                        position={[0, 0, 0]}
+                        onPointerOver={() => setHovered(true)}
+                        onPointerOut={() => setHovered(false)}
+                        scale={pulseScale}
+                    >
                         <MeshDistortMaterial
                             color="#4338ca"
                             attach="material"
-                            distort={0.3 + Math.abs(mousePosition.x) * 0.2}
-                            speed={2}
+                            distort={distortionIntensity}
+                            speed={distortionSpeed}
                             roughness={0.4}
                             metalness={0.8}
                             wireframe={false}
                         >
                             <GradientTexture
-                                stops={[0, 0.5, 1]}
-                                colors={['#818cf8', '#c084fc', '#f472b6']}
+                                stops={[0, 0.3, 0.6, 1]}
+                                colors={['#818cf8', '#c084fc', '#f472b6', '#818cf8']}
                                 size={1024}
                             />
                         </MeshDistortMaterial>
                     </Sphere>
                 </Float>
+
+                {/* Enhanced Orbital Spheres */}
                 {[0, 120, 240].map((angle, i) => (
                     <group key={i} rotation={[Math.PI / 6, 0, (angle * Math.PI) / 180]}>
                         <Float
-                            speed={4}
+                            speed={4 + i}
                             rotationIntensity={2}
                             floatIntensity={2}
                             position={[2.5, 0, 0]}
@@ -73,27 +100,44 @@ function Scene() {
                         </Float>
                         <mesh>
                             <ringGeometry args={[2.4, 2.45, 64]} />
-                            <meshBasicMaterial color="#818cf8" transparent opacity={0.1} side={THREE.DoubleSide} />
+                            <meshBasicMaterial
+                                color="#818cf8"
+                                transparent
+                                opacity={0.15}
+                                side={THREE.DoubleSide}
+                            />
                         </mesh>
                     </group>
                 ))}
+
+                {/* Enhanced Particles */}
                 <Sparkles
-                    count={150}
+                    count={200}
                     scale={12}
                     size={2}
                     speed={0.5}
                     color="#c084fc"
+                    opacity={0.5}
+                />
+                <Sparkles
+                    count={100}
+                    scale={10}
+                    size={1}
+                    speed={0.2}
+                    color="#f472b6"
+                    opacity={0.3}
                 />
                 <Stars
                     radius={50}
                     depth={50}
-                    count={3000}
+                    count={5000}
                     factor={4}
                     saturation={1}
                     fade
                     speed={1.5}
                 />
             </group>
+
             <OrbitControls
                 enableZoom={false}
                 autoRotate
@@ -122,7 +166,11 @@ export default function Hero() {
                     <Scene />
                 </Canvas>
             </div>
-            <div className="absolute inset-0 bg-gradient-radial from-transparent via-gray-900/50 to-gray-900" />
+
+            {/* Enhanced Background Gradient */}
+            <div className="absolute inset-0 bg-gradient-radial from-transparent via-gray-900/50 to-gray-900">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-indigo-500/10 via-transparent to-transparent animate-pulse" />
+            </div>
 
             <motion.div
                 style={{ y, opacity }}
@@ -135,6 +183,7 @@ export default function Hero() {
                         transition={{ duration: 1, delay: 0.4 }}
                         className="space-y-4 relative"
                     >
+                        {/* Enhanced Text Container */}
                         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg filter blur-xl opacity-20 animate-pulse" />
 
                         <motion.div
@@ -157,12 +206,19 @@ export default function Hero() {
                                 }}
                                 className="absolute inset-0 blur-3xl opacity-30"
                             />
-                            <h2 className="text-xl md:text-2xl font-light text-indigo-300 tracking-wider">
+                            <motion.h2
+                                className="text-xl md:text-2xl font-light text-indigo-300 tracking-wider"
+                                whileHover={{ scale: 1.05 }}
+                            >
                                 Hello, I'm
-                            </h2>
-                            <h1 className="text-6xl md:text-8xl font-bold gradient-text tracking-tight">
+                            </motion.h2>
+                            <motion.h1
+                                className="text-6xl md:text-8xl font-bold gradient-text tracking-tight"
+                                whileHover={{ scale: 1.02 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                            >
                                 Vincent Wirawan
-                            </h1>
+                            </motion.h1>
                         </motion.div>
                     </motion.div>
 
@@ -172,14 +228,21 @@ export default function Hero() {
                         transition={{ duration: 0.8, delay: 0.6 }}
                         className="space-y-4"
                     >
-                        <p className="text-2xl md:text-3xl text-gray-200 font-light tracking-wide">
+                        <motion.p
+                            className="text-2xl md:text-3xl text-gray-200 font-light tracking-wide"
+                            whileHover={{ scale: 1.05 }}
+                        >
                             Software Engineer
-                        </p>
-                        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+                        </motion.p>
+                        <motion.p
+                            className="text-gray-400 max-w-2xl mx-auto text-lg"
+                            whileHover={{ scale: 1.05 }}
+                        >
                             Crafting intelligent digital experiences with code and technology
-                        </p>
+                        </motion.p>
                     </motion.div>
 
+                    {/* Enhanced Social Links */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -197,7 +260,7 @@ export default function Hero() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={item.label}
-                                whileHover={{ scale: 1.1, y: -2 }}
+                                whileHover={{ scale: 1.1, y: -4 }}
                                 whileTap={{ scale: 0.95 }}
                                 className="relative p-4 bg-white/5 rounded-xl backdrop-blur-sm hover:bg-white/10 transition-all duration-300 border border-white/10 hover:border-white/20 group"
                             >
@@ -211,13 +274,27 @@ export default function Hero() {
                             </motion.a>
                         ))}
                     </motion.div>
+
+                    {/* Enhanced Scroll Indicator */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: isLoaded ? 1 : 0 }}
                         transition={{ duration: 1, delay: 1.2 }}
                         className="absolute bottom-12 left-1/2 transform -translate-x-1/2 flex flex-col items-center space-y-2"
                     >
-                        <span className="text-sm text-gray-400">Scroll to explore</span>
+                        <motion.span
+                            className="text-sm text-gray-400"
+                            animate={{
+                                opacity: [0.5, 1, 0.5],
+                            }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            }}
+                        >
+                            Scroll to explore
+                        </motion.span>
                         <motion.div
                             animate={{
                                 y: [0, 8, 0],
