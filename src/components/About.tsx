@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 const skills = {
     frontend: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js'],
     backend: ['Node.js', 'Express', 'MongoDB', 'REST APIs'],
-    languages: ['C++', 'Java', 'JavaScript', 'Python', 'SQL', 'Python'],
+    languages: ['C++', 'Java', 'JavaScript', 'Python', 'SQL'],
     other: ['Git', 'Docker', 'OpenCV', 'PyTorch', 'Figma']
 };
 
